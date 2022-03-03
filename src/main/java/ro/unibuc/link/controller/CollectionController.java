@@ -34,15 +34,15 @@ public class CollectionController {
         return CollectionService.deleteCollection(collectionDeleteDTO.getCollectionName(), collectionDeleteDTO.getPrivateWord());
     }
 
-    @PostMapping("/add")
+    @PostMapping("/add/{collectionName}")
     public @ResponseBody
-    CollectionShowDTO addUrl(@RequestBody WrapperDTO wrapperDTO) {
-        return CollectionService.addUrlToCollection(wrapperDTO.getCollectionDeleteDTO(), wrapperDTO.getUrlEntity());
+    CollectionShowDTO addUrl(@PathVariable String collectionName, @RequestBody WrapperDTO wrapperDTO) {
+        return CollectionService.addUrlToCollection(collectionName, wrapperDTO.getUrlCollectionEntity(), wrapperDTO.getPrivateWord());
     }
 
-    @DeleteMapping("/remove")
+    @DeleteMapping("/remove/{collectionName}")
     public @ResponseBody
-    CollectionShowDTO removeUrl(@RequestBody WrapperDTO wrapperDTO ) {
-        return CollectionService.removeUrlFromCollection(wrapperDTO.getCollectionDeleteDTO(), wrapperDTO.getUrlEntity());
+    CollectionShowDTO removeUrl(@PathVariable String collectionName, @RequestBody WrapperDTO wrapperDTO ) {
+        return CollectionService.removeUrlFromCollection(collectionName, wrapperDTO.getUrlCollectionEntity(), wrapperDTO.getPrivateWord());
     }
 }

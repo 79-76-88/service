@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ro.unibuc.link.data.CollectionEntity;
-import ro.unibuc.link.data.CollectionRepository;
-import ro.unibuc.link.data.UrlEntity;
-import ro.unibuc.link.data.UrlRepository;
+import ro.unibuc.link.data.*;
 import ro.unibuc.link.dto.CollectionDeleteDTO;
 import ro.unibuc.link.dto.CollectionShowDTO;
 import ro.unibuc.link.dto.UrlShowDTO;
@@ -44,30 +41,30 @@ public class CollectionService {
         return new CollectionShowDTO(result);
     }
 
-    public CollectionShowDTO addUrlToCollection(CollectionDeleteDTO collectionDeleteDTO, UrlEntity urlEntity) {
-        var optionalName = collectionRepository.findById(collectionDeleteDTO.getCollectionName());
+    public CollectionShowDTO addUrlToCollection(String collectionName, UrlCollectionEntity urlCollectionEntity, String privateWord) {
+        var optionalName = collectionRepository.findById(collectionName);
         if (optionalName.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection not found");
         }
         var collection = optionalName.get();
-        if (!collectionDeleteDTO.getPrivateWord().equals(collection.getPrivateWord())) {
+        if (!privateWord.equals(collection.getPrivateWord())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Private word doesn't match requested collection");
         }
-        collection.getUrls().add(urlEntity);
+        collection.getUrls().add(urlCollectionEntity);
         collectionRepository.save(collection);
         return new CollectionShowDTO(collection);
     }
 
-    public CollectionShowDTO removeUrlFromCollection(CollectionDeleteDTO collectionDeleteDTO, UrlEntity urlEntity) {
-        var optionalName = collectionRepository.findById(collectionDeleteDTO.getCollectionName());
+    public CollectionShowDTO removeUrlFromCollection(String collectionName, UrlCollectionEntity urlCollectionEntity, String privateWord) {
+        var optionalName = collectionRepository.findById(collectionName);
         if (optionalName.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection not found");
         }
         var collection = optionalName.get();
-        if (!collectionDeleteDTO.getPrivateWord().equals(collection.getPrivateWord())) {
+        if (!privateWord.equals(collection.getPrivateWord())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Private word doesn't match requested collection");
         }
-        collection.getUrls().remove(urlEntity);
+        collection.getUrls().remove(urlCollectionEntity);
         collectionRepository.save(collection);
         return new CollectionShowDTO(collection);
     }
