@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 
 @Data
 public class UrlCollectionEntity {
-    @Id
+
     private String urlName;
     private String externalUrl;
 

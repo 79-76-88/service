@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ro.unibuc.link.data.CollectionEntity;
-import ro.unibuc.link.data.UrlEntity;
 import ro.unibuc.link.dto.CollectionDeleteDTO;
 import ro.unibuc.link.dto.CollectionShowDTO;
-import ro.unibuc.link.dto.WrapperDTO;
+import ro.unibuc.link.dto.UrlCollectionDTO;
 import ro.unibuc.link.services.CollectionService;
 
 @Controller
@@ -36,13 +35,13 @@ public class CollectionController {
 
     @PostMapping("/add/{collectionName}")
     public @ResponseBody
-    CollectionShowDTO addUrl(@PathVariable String collectionName, @RequestBody WrapperDTO wrapperDTO) {
-        return CollectionService.addUrlToCollection(collectionName, wrapperDTO.getUrlCollectionEntity(), wrapperDTO.getPrivateWord());
+    CollectionShowDTO addUrl(@PathVariable String collectionName, @RequestBody UrlCollectionDTO urlCollectionDTO) {
+        return CollectionService.addUrlToCollection(collectionName, urlCollectionDTO.getUrlCollectionEntity(), urlCollectionDTO.getPrivateWord());
     }
 
     @DeleteMapping("/remove/{collectionName}")
     public @ResponseBody
-    CollectionShowDTO removeUrl(@PathVariable String collectionName, @RequestBody WrapperDTO wrapperDTO ) {
-        return CollectionService.removeUrlFromCollection(collectionName, wrapperDTO.getUrlCollectionEntity(), wrapperDTO.getPrivateWord());
+    CollectionShowDTO removeUrl(@PathVariable String collectionName, @RequestBody UrlCollectionDTO urlCollectionDTO ) {
+        return CollectionService.removeUrlFromCollection(collectionName, urlCollectionDTO.getUrlCollectionEntity(), urlCollectionDTO.getPrivateWord());
     }
 }
