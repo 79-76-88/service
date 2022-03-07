@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.unibuc.link.data.CollectionEntity;
 import ro.unibuc.link.dto.CollectionDeleteDTO;
 import ro.unibuc.link.dto.CollectionShowDTO;
+import ro.unibuc.link.dto.IsAvailableDTO;
 import ro.unibuc.link.dto.UrlCollectionDTO;
 import ro.unibuc.link.services.CollectionService;
 
@@ -17,7 +18,7 @@ public class CollectionController {
 
     @GetMapping("/check/{collectionName}")
     public @ResponseBody
-    boolean checkIfCollectionIsAvailable(@PathVariable String collectionName) {
+    IsAvailableDTO checkIfCollectionIsAvailable(@PathVariable String collectionName) {
         return CollectionService.checkCollectionNameIsAvailable(collectionName);
     }
 
@@ -41,7 +42,7 @@ public class CollectionController {
 
     @DeleteMapping("/remove/{collectionName}")
     public @ResponseBody
-    CollectionShowDTO removeUrl(@PathVariable String collectionName, @RequestBody UrlCollectionDTO urlCollectionDTO ) {
+    CollectionShowDTO removeUrl(@PathVariable String collectionName, @RequestBody UrlCollectionDTO urlCollectionDTO) {
         return CollectionService.removeUrlFromCollection(collectionName, urlCollectionDTO.getUrlCollectionEntity(), urlCollectionDTO.getPrivateWord());
     }
 }
