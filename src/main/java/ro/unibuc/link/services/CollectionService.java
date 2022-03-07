@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ro.unibuc.link.data.*;
-import ro.unibuc.link.dto.CollectionDeleteDTO;
+import ro.unibuc.link.data.CollectionEntity;
+import ro.unibuc.link.data.CollectionRepository;
+import ro.unibuc.link.data.UrlCollectionEntity;
 import ro.unibuc.link.dto.CollectionShowDTO;
-import ro.unibuc.link.dto.UrlShowDTO;
+import ro.unibuc.link.dto.IsAvailableDTO;
 
 @Service
 public class CollectionService {
@@ -21,8 +22,8 @@ public class CollectionService {
         return new CollectionShowDTO(collectionRepository.save(collectionEntity));
     }
 
-    public boolean checkCollectionNameIsAvailable(String name) {
-        return collectionRepository.findById(name).isEmpty();
+    public IsAvailableDTO checkCollectionNameIsAvailable(String name) {
+        return new IsAvailableDTO(collectionRepository.findById(name).isEmpty());
     }
 
     public CollectionShowDTO deleteCollection(String collectionName, String privateWord) {

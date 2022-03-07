@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ro.unibuc.link.data.UrlEntity;
+import ro.unibuc.link.dto.IsAvailableDTO;
 import ro.unibuc.link.dto.UrlDeleteDTO;
 import ro.unibuc.link.dto.UrlShowDTO;
 import ro.unibuc.link.services.UrlService;
@@ -17,7 +18,7 @@ public class UrlController {
 
     @GetMapping("/check/{url}")
     public @ResponseBody
-    boolean checkIfUrlIsAvailable(@PathVariable String url) {
+    IsAvailableDTO checkIfUrlIsAvailable(@PathVariable String url) {
         return urlService.checkInternalUrlIsAvailable(url);
     }
 

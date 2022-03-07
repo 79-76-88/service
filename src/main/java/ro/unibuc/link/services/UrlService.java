@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ro.unibuc.link.data.UrlEntity;
 import ro.unibuc.link.data.UrlRepository;
+import ro.unibuc.link.dto.IsAvailableDTO;
 import ro.unibuc.link.dto.UrlShowDTO;
 
 @Service
@@ -29,8 +30,8 @@ public class UrlService {
         return new UrlShowDTO(urlRepository.save(urlEntity));
     }
 
-    public boolean checkInternalUrlIsAvailable(String url) {
-        return urlRepository.findById(url).isEmpty();
+    public IsAvailableDTO checkInternalUrlIsAvailable(String url) {
+        return new IsAvailableDTO(urlRepository.findById(url).isEmpty());
     }
 
     public UrlShowDTO deleteRedirectMapping(String internalUrl, String deleteWord) {
