@@ -71,4 +71,23 @@ public class CollectionService {
         collectionRepository.save(collection);
         return new CollectionShowDTO(collection);
     }
+
+    private UrlCollectionEntity findUrlInCollection(CollectionEntity collection, String url){
+        for (UrlCollectionEntity urlCollectionEntity:collection.getUrls()){
+            if(urlCollectionEntity.getUrlName().equals(url)){
+                return urlCollectionEntity;
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Url not found");
+    }
+
+    public String getRedirectMapping(String collectionName, String url) {
+        var optionalName = collectionRepository.findById(collectionName);
+        if (optionalName.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection not found");
+        }
+        var collection = optionalName.get();
+        var urlToBeRedirected = findUrlInCollection(collection,url);
+        return "redirect" + urlToBeRedirected.getExternalUrl();
+    }
 }

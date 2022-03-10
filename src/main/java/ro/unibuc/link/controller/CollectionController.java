@@ -42,4 +42,9 @@ public class CollectionController {
     CollectionShowDTO removeUrl(@PathVariable String collectionName, @RequestBody UrlCollectionDTO urlCollectionDTO) {
         return CollectionService.removeUrlFromCollection(collectionName, urlCollectionDTO.getUrlCollectionEntity(), urlCollectionDTO.getPrivateWord());
     }
+
+    @GetMapping("/redirect/{collectionName}/{url}")
+    public String redirect(@PathVariable String collectionName, @PathVariable String url) {
+        return CollectionService.getRedirectMapping(collectionName, url);
+    }
 }
