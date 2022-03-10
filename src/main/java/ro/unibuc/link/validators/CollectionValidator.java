@@ -10,13 +10,13 @@ import ro.unibuc.link.dto.UrlCollectionDTO;
 @Component
 public class CollectionValidator {
     public void validate(CollectionSetDTO collectionSetDTO) {
-        if (collectionSetDTO.getCollectionName() == null || collectionSetDTO.getCollectionName().length() >= 3) {
+        if (collectionSetDTO.getCollectionName() == null || collectionSetDTO.getCollectionName().length() < 3) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Collection name must be at least over 3 characters");
         }
     }
 
     public void validate(CollectionDeleteDTO collectionDeleteDTO) {
-        if (collectionDeleteDTO.getCollectionName() == null || collectionDeleteDTO.getCollectionName().length() >= 3) {
+        if (collectionDeleteDTO.getCollectionName() == null || collectionDeleteDTO.getCollectionName().length() < 3) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Collection name must be at least over 3 characters");
         }
     }
@@ -27,7 +27,7 @@ public class CollectionValidator {
         }
 
         if (urlCollectionDTO.getUrlCollectionEntity().getUrlName() == null
-                || urlCollectionDTO.getUrlCollectionEntity().getUrlName().length() > 3) {
+                || urlCollectionDTO.getUrlCollectionEntity().getUrlName().length() < 3) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url name must over 3 characters");
         }
         if (urlCollectionDTO.getUrlCollectionEntity().getExternalUrl() == null) {

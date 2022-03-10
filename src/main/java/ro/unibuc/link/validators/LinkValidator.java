@@ -9,17 +9,17 @@ import ro.unibuc.link.dto.UrlDeleteDTO;
 @Component
 public class LinkValidator {
     public void validate(UrlEntity entity) {
-        if (entity.getInternalUrl() == null || entity.getInternalUrl().length() <= 3) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Internal url must be at least over 3 characters");
+        if (entity.getInternalUrl() == null || entity.getInternalUrl().length() <= 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Internal url must be at least over 1 character");
         }
-        if (entity.getExternalUrl() != null) {
+        if (entity.getExternalUrl() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "External url must exist");
         }
     }
 
     public void validate(UrlDeleteDTO urlDeleteDTO) {
-        if (urlDeleteDTO.getInternalUrl() == null || urlDeleteDTO.getInternalUrl().length() >= 3) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Internal url must be at least over 3 characters");
+        if (urlDeleteDTO.getInternalUrl() == null || urlDeleteDTO.getInternalUrl().length() <= 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Internal url must be at least over 1 character");
         }
     }
 }
