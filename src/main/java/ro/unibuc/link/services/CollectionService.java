@@ -7,6 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ro.unibuc.link.data.CollectionEntity;
 import ro.unibuc.link.data.CollectionRepository;
 import ro.unibuc.link.data.UrlCollectionEntity;
+import ro.unibuc.link.dto.CollectionSetDTO;
 import ro.unibuc.link.dto.CollectionShowDTO;
 import ro.unibuc.link.dto.IsAvailableDTO;
 
@@ -15,11 +16,12 @@ public class CollectionService {
     @Autowired
     private CollectionRepository collectionRepository;
 
-    public CollectionShowDTO setCollection(CollectionEntity collectionEntity) {
-        if (collectionRepository.findById(collectionEntity.getCollectionName()).isPresent()) {
+    public CollectionShowDTO setCollection(CollectionSetDTO collectionSetDTO) {
+        if (collectionRepository.findById(collectionSetDTO.getCollectionName()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Collection name already exists");
         }
-        return new CollectionShowDTO(collectionRepository.save(collectionEntity));
+
+        return new CollectionShowDTO(collectionRepository.save(new CollectionEntity(collectionSetDTO)));
     }
 
     public IsAvailableDTO checkCollectionNameIsAvailable(String name) {

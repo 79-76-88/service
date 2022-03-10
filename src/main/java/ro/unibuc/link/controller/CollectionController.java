@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ro.unibuc.link.data.CollectionEntity;
-import ro.unibuc.link.dto.CollectionDeleteDTO;
-import ro.unibuc.link.dto.CollectionShowDTO;
-import ro.unibuc.link.dto.IsAvailableDTO;
-import ro.unibuc.link.dto.UrlCollectionDTO;
+import ro.unibuc.link.dto.*;
 import ro.unibuc.link.services.CollectionService;
 
 @Controller
@@ -24,8 +21,8 @@ public class CollectionController {
 
     @PostMapping("/set")
     public @ResponseBody
-    CollectionShowDTO setMapping(@RequestBody CollectionEntity collectionEntity) {
-        return CollectionService.setCollection(collectionEntity);
+    CollectionShowDTO setMapping(@RequestBody CollectionSetDTO collectionSetDTO) {
+        return CollectionService.setCollection(collectionSetDTO);
     }
 
     @DeleteMapping("")
