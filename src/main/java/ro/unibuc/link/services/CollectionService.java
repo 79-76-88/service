@@ -71,4 +71,11 @@ public class CollectionService {
         collectionRepository.save(collection);
         return new CollectionShowDTO(collection);
     }
+
+    public String getRedirectMapping(String collectionName, String url) {
+        var redirectedUrl = collectionRepository.findById(collectionName)
+                .map(CollectionEntity::getUrls).flatMap(list -> list.stream().filter(collection -> collection.getUrlName().equals(url)).findFirst())
+                .map(entity -> "redirect:" + entity.getExternalUrl());
+        return redirectedUrl.get();
+    }
 }
