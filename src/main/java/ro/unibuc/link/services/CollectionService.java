@@ -76,6 +76,9 @@ public class CollectionService {
         var redirectedUrl = collectionRepository.findById(collectionName)
                 .map(CollectionEntity::getUrls).flatMap(list -> list.stream().filter(collection -> collection.getUrlName().equals(url)).findFirst())
                 .map(entity -> "redirect:" + entity.getExternalUrl());
+        if (redirectedUrl.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         return redirectedUrl.get();
     }
 }
