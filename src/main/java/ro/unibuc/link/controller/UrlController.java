@@ -8,6 +8,7 @@ import ro.unibuc.link.dto.IsAvailableDTO;
 import ro.unibuc.link.dto.UrlDeleteDTO;
 import ro.unibuc.link.dto.UrlShowDTO;
 import ro.unibuc.link.services.UrlService;
+import ro.unibuc.link.validators.LinkValidator;
 
 
 @Controller
@@ -15,6 +16,8 @@ import ro.unibuc.link.services.UrlService;
 public class UrlController {
     @Autowired
     private UrlService urlService;
+    @Autowired
+    private LinkValidator validator;
 
     @GetMapping("/check/{url}")
     public @ResponseBody
@@ -25,12 +28,14 @@ public class UrlController {
     @PostMapping("/set")
     public @ResponseBody
     UrlShowDTO setMapping(@RequestBody UrlEntity urlEntity) {
+        validator.validate(urlEntity);
         return urlService.setRedirectMapping(urlEntity);
     }
 
     @DeleteMapping("")
     public @ResponseBody
     UrlShowDTO deleteMapping(@RequestBody UrlDeleteDTO urlDeleteDTO) {
+        validator.validate(urlDeleteDTO);
         return urlService.deleteRedirectMapping(urlDeleteDTO.getInternalUrl(), urlDeleteDTO.getDeleteWord());
     }
 
