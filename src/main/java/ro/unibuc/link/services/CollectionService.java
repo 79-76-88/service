@@ -57,17 +57,17 @@ public class CollectionService {
     }
 
     public CollectionShowDTO removeUrlFromCollection(String collectionName, UrlCollectionEntity urlCollectionEntity, String privateWord) {
-        var optionalName = collectionRepository.findById(collectionName);
-        if (optionalName.isEmpty()) {
+        var collectionEntity = collectionRepository.findByName(collectionName);
+        if (collectionEntity == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection not found");
         }
-        var collection = optionalName.get();
-        if (!privateWord.equals(collection.getPrivateWord())) {
+
+        if (!privateWord.equals(collectionEntity.getPrivateWord())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Private word doesn't match requested collection");
         }
-        collection.getUrls().remove(urlCollectionEntity);
-        collectionRepository.save(collection);
-        return new CollectionShowDTO(collection);
+        collectionEntity.getUrls().remove(urlCollectionEntity);
+        collectionRepository.save(collectionEntity);
+        return new CollectionShowDTO(collectionEntity);
     }
 
     public String getRedirectMapping(String collectionName, String url) {

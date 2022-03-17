@@ -10,11 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import ro.unibuc.link.data.CollectionEntity;
 import ro.unibuc.link.data.CollectionRepository;
+import ro.unibuc.link.data.UrlCollectionEntity;
 import ro.unibuc.link.dto.CollectionSetDTO;
 import ro.unibuc.link.dto.CollectionShowDTO;
 import ro.unibuc.link.dto.IsAvailableDTO;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -166,10 +169,124 @@ public class CollectionServiceTest extends TestCase {
 
     @Test
     void addUrlToCollection() {
+        String collectionName = "collection1";
+        String privateWord = "abc";
+        UrlCollectionEntity urlCollectionEntity = new UrlCollectionEntity("url1", "https://fmi.unibuc.ro/");
+        CollectionEntity collectionEntity = new CollectionEntity(collectionName,privateWord);
+        List<UrlCollectionEntity> urls = new ArrayList<>(){{add(urlCollectionEntity);}};
+
+        when(mockCollectionRepository.findByName(collectionName)).thenReturn(collectionEntity);
+
+        CollectionShowDTO collectionShowDTO = collectionService.addUrlToCollection(collectionName,urlCollectionEntity,privateWord);
+        Assertions.assertEquals(collectionName, collectionShowDTO.getCollectionName());
+        Assertions.assertEquals(urls, collectionShowDTO.getUrls());
+    }
+
+    @Test
+    void addUrlToCollection_WrongPrivateWord() {
+        String collectionName = "collection1";
+        String privateWord = "abc";
+        String wrongPrivateWord = "abb";
+        UrlCollectionEntity urlCollectionEntity = new UrlCollectionEntity("url1", "https://fmi.unibuc.ro/");
+        CollectionEntity collectionEntity = new CollectionEntity(collectionName,privateWord);
+
+
+        when(mockCollectionRepository.findByName(collectionName)).thenReturn(collectionEntity);
+        try{
+            CollectionShowDTO collectionShowDTO = collectionService.addUrlToCollection(collectionName,urlCollectionEntity,wrongPrivateWord);
+        } catch (Exception ex){
+            ResponseStatusException response = new ResponseStatusException(HttpStatus.FORBIDDEN, "Private word doesn't match requested collection");
+            Assertions.assertEquals(response.getMessage(), ex.getMessage());
+        }
+
+    }
+
+    @Test
+    void addUrlToCollection_CollectionNotFound() {
+        String collectionName = "collection1";
+        String privateWord = "abc";
+        UrlCollectionEntity urlCollectionEntity = new UrlCollectionEntity("url1", "https://fmi.unibuc.ro/");
+
+        when(mockCollectionRepository.findByName(collectionName)).thenReturn(null);
+        try{
+            CollectionShowDTO collectionShowDTO = collectionService.addUrlToCollection(collectionName,urlCollectionEntity,privateWord);
+        } catch (Exception ex){
+            ResponseStatusException response = new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection not found");
+            Assertions.assertEquals(response.getMessage(), ex.getMessage());
+        }
+
     }
 
     @Test
     void removeUrlFromCollection() {
+
+        String collectionName = "collection1";
+        String privateWord = "abc";
+        UrlCollectionEntity urlCollectionEntity = new UrlCollectionEntity("url1", "https://fmi.unibuc.ro/");
+        CollectionEntity collectionEntity = new CollectionEntity(collectionName,privateWord);
+        List<UrlCollectionEntity> urls = new ArrayList<>();
+
+        when(mockCollectionRepository.findByName(collectionName)).thenReturn(collectionEntity);
+
+        CollectionShowDTO collectionShowDTO = collectionService.removeUrlFromCollection(collectionName,urlCollectionEntity,privateWord);
+        Assertions.assertEquals(collectionName, collectionShowDTO.getCollectionName());
+        Assertions.assertEquals(urls, collectionShowDTO.getUrls());
+    }
+
+    @Test
+    void removeUrlFromCollection_ListNotEmpty() {
+
+        String collectionName = "collection1";
+        String privateWord = "abc";
+        UrlCollectionEntity urlCollectionEntity = new UrlCollectionEntity("url1", "https://fmi.unibuc.ro/");
+        UrlCollectionEntity urlCollectionEntity2 = new UrlCollectionEntity("url2", "https://fmi.unibuc.ro/");
+        List<UrlCollectionEntity> urls = new ArrayList<>(){{
+            add(urlCollectionEntity);
+            add(urlCollectionEntity2);
+        }};
+        CollectionEntity collectionEntity = new CollectionEntity(collectionName, urls, privateWord);
+        urls.remove(urlCollectionEntity);
+
+        when(mockCollectionRepository.findByName(collectionName)).thenReturn(collectionEntity);
+
+        CollectionShowDTO collectionShowDTO = collectionService.removeUrlFromCollection(collectionName,urlCollectionEntity,privateWord);
+        Assertions.assertEquals(collectionName, collectionShowDTO.getCollectionName());
+        Assertions.assertEquals(urls, collectionShowDTO.getUrls());
+    }
+
+    @Test
+    void removeUrlFromCollection_CollectionNotFound() {
+        String collectionName = "collection1";
+        String privateWord = "abc";
+        UrlCollectionEntity urlCollectionEntity = new UrlCollectionEntity("url1", "https://fmi.unibuc.ro/");
+
+        when(mockCollectionRepository.findByName(collectionName)).thenReturn(null);
+        try{
+            CollectionShowDTO collectionShowDTO = collectionService.removeUrlFromCollection(collectionName,urlCollectionEntity,privateWord);
+        } catch (Exception ex){
+            ResponseStatusException response = new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection not found");
+            Assertions.assertEquals(response.getMessage(), ex.getMessage());
+        }
+
+    }
+
+    @Test
+    void RemoveUrlFromCollection_WrongPrivateWord() {
+        String collectionName = "collection1";
+        String privateWord = "abc";
+        String wrongPrivateWord = "abb";
+        UrlCollectionEntity urlCollectionEntity = new UrlCollectionEntity("url1", "https://fmi.unibuc.ro/");
+        CollectionEntity collectionEntity = new CollectionEntity(collectionName,privateWord);
+
+
+        when(mockCollectionRepository.findByName(collectionName)).thenReturn(collectionEntity);
+        try{
+            CollectionShowDTO collectionShowDTO = collectionService.removeUrlFromCollection(collectionName,urlCollectionEntity,wrongPrivateWord);
+        } catch (Exception ex){
+            ResponseStatusException response = new ResponseStatusException(HttpStatus.FORBIDDEN, "Private word doesn't match requested collection");
+            Assertions.assertEquals(response.getMessage(), ex.getMessage());
+        }
+
     }
 
     @Test
