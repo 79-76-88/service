@@ -27,4 +27,10 @@ public class CollectionEntity {
         this.urls = new ArrayList<>();
         this.privateWord = collectionSetDTO.getPrivateWord();
     }
+
+    public CollectionEntity(String collectionName, String privateWord){
+        this.collectionName = collectionName;
+        this.urls = new ArrayList<>();
+        this.privateWord = privateWord;
+    }
 }
