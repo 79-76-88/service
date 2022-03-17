@@ -17,26 +17,25 @@ public class CollectionService {
     private CollectionRepository collectionRepository;
 
     public CollectionShowDTO setCollection(CollectionSetDTO collectionSetDTO) {
-        if (collectionRepository.findById(collectionSetDTO.getCollectionName()).isPresent()) {
+        if (collectionRepository.findByName(collectionSetDTO.getCollectionName())!=null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Collection name already exists");
         }
-
-        return new CollectionShowDTO(collectionRepository.save(new CollectionEntity(collectionSetDTO)));
+        CollectionEntity collectionEntity = new CollectionEntity(collectionSetDTO);
+        return new CollectionShowDTO(collectionRepository.save(collectionEntity));
     }
 
     public IsAvailableDTO checkCollectionNameIsAvailable(String name) {
-        return new IsAvailableDTO(collectionRepository.findById(name).isEmpty());
+        return new IsAvailableDTO(collectionRepository.findByName(name) != null);
     }
 
     public CollectionShowDTO deleteCollection(String collectionName, String privateWord) {
         if (collectionName == null || privateWord == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Required Information Is Lacking");
         }
-        var optionalName = collectionRepository.findById(collectionName);
-        if (optionalName.isEmpty()) {
+        var result = collectionRepository.findByName(collectionName);
+        if (result == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection not found");
         }
-        var result = optionalName.get();
         if (!privateWord.equals(result.getPrivateWord())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Private word doesn't match requested collection");
         }
@@ -45,31 +44,30 @@ public class CollectionService {
     }
 
     public CollectionShowDTO addUrlToCollection(String collectionName, UrlCollectionEntity urlCollectionEntity, String privateWord) {
-        var optionalName = collectionRepository.findById(collectionName);
-        if (optionalName.isEmpty()) {
+        var collectionEntity = collectionRepository.findByName(collectionName);
+        if (collectionEntity == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection not found");
         }
-        var collection = optionalName.get();
-        if (!privateWord.equals(collection.getPrivateWord())) {
+        if (!privateWord.equals(collectionEntity.getPrivateWord())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Private word doesn't match requested collection");
         }
-        collection.getUrls().add(urlCollectionEntity);
-        collectionRepository.save(collection);
-        return new CollectionShowDTO(collection);
+        collectionEntity.getUrls().add(urlCollectionEntity);
+        collectionRepository.save(collectionEntity);
+        return new CollectionShowDTO(collectionEntity);
     }
 
     public CollectionShowDTO removeUrlFromCollection(String collectionName, UrlCollectionEntity urlCollectionEntity, String privateWord) {
-        var optionalName = collectionRepository.findById(collectionName);
-        if (optionalName.isEmpty()) {
+        var collectionEntity = collectionRepository.findByName(collectionName);
+        if (collectionEntity == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Collection not found");
         }
-        var collection = optionalName.get();
-        if (!privateWord.equals(collection.getPrivateWord())) {
+
+        if (!privateWord.equals(collectionEntity.getPrivateWord())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Private word doesn't match requested collection");
         }
-        collection.getUrls().remove(urlCollectionEntity);
-        collectionRepository.save(collection);
-        return new CollectionShowDTO(collection);
+        collectionEntity.getUrls().remove(urlCollectionEntity);
+        collectionRepository.save(collectionEntity);
+        return new CollectionShowDTO(collectionEntity);
     }
 
     public String getRedirectMapping(String collectionName, String url) {
