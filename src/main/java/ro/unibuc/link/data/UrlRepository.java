@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UrlRepository extends MongoRepository<UrlEntity, String> {
-    UrlEntity findByUrl(String internalUrl);
 }
