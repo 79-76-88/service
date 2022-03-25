@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import ro.unibuc.link.data.UrlEntity;
 import ro.unibuc.link.data.UrlRepository;
 
@@ -11,6 +12,7 @@ import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 @EnableMongoRepositories(basePackageClasses = UrlRepository.class)
+@CrossOrigin
 public class LinkApplication {
 
     @Autowired

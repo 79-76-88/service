@@ -1,4 +1,4 @@
-package ro.unibuc.hello.e2e.util;
+package ro.unibuc.link.e2e.util;
 
 import org.springframework.http.client.ClientHttpResponse;
 
