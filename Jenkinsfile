@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_PASSWORD = credentials("qpalzmwosk")
+        DOCKER_PASSWORD = credentials("beab595e2e55c1f32728eb03694f758915320028ed1481b2f82e5ba74887a7325129b819916de18619b6cdef21a55d5fa9eb31eae9c5c1eb3aa3b014265bf5e9166e186c0ec1d514726fe9bf87650cc88797bc6f132fac73096bd283440a0394e8750799a94f")
     }
 
     stages {
