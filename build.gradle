@@ -9,7 +9,7 @@ group = 'ro.unibuc'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-apply plugin: 'java'
+apply plugin: 'base'
 
 repositories {
     mavenCentral()
