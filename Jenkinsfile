@@ -35,7 +35,10 @@ pipeline {
         }
         stage('Docker compose'){
             script {
-               IMAGE_TAG="${env.IMAGE_TAG} docker-compose up -d hello"
+               IMAGE_TAG = "${env.IMAGE_TAG}"
+            }
+            steps{
+                sh "docker-compose up -d hello"
             }
         }
 
