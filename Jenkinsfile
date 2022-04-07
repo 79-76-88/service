@@ -28,7 +28,7 @@ pipeline {
               sh "docker login docker.io -u radradradrad -p $DOCKER_PASSWORD"
               sh "docker push radradradrad/hello-img:${env.IMAGE_TAG}"
               sh "git tag ${env.IMAGE_TAG}"
-              sh "git push https://$GITHUB_TOKEN@github.com/Madalina-Nicolescu/service.git ${env.IMAGE_TAG}"
+              sh "git push https://$GITHUB_TOKEN@github.com/79-76-88/service.git ${env.IMAGE_TAG}"
               }
         }
         stage('Docker compose'){
