@@ -2,8 +2,6 @@ environment {
         DOCKER_PASSWORD = credentials("docker_password")
         GITHUB_TOKEN = credentials("github_token")
     }
-
-def IMAGE
 pipeline {
     agent any
     stages {
@@ -27,17 +25,17 @@ pipeline {
         }
         stage('Push image') {
               steps {
-              sh "docker login docker.io -u radradradrad -p qwerty1234"
+              sh "docker login docker.io -u radradradrad -p $GDOCKER_PASSWORD"
               sh "docker push radradradrad/hello-img:${env.IMAGE_TAG}"
               sh "git tag ${env.IMAGE_TAG}"
               sh "git push https://$GITHUB_TOKEN@github.com/Madalina-Nicolescu/service.git ${env.IMAGE_TAG}"
               }
         }
         stage('Docker compose'){
-            script {
-               IMAGE_TAG = "${env.IMAGE_TAG}"
-            }
             steps{
+                script {
+                   IMAGE_TAG = "${env.IMAGE_TAG}"
+                }
                 sh "docker-compose up -d hello"
             }
         }
