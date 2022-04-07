@@ -3,7 +3,6 @@ environment {
         GITHUB_TOKEN = credentials("github_token")
     }
 
-def IMAGE
 pipeline {
     agent any
     stages {
