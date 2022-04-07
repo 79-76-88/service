@@ -1,9 +1,9 @@
-environment {
-        DOCKER_PASSWORD = credentials("docker_password")
-        GITHUB_TOKEN = credentials("github_token")
-    }
 pipeline {
     agent any
+    environment {
+            DOCKER_PASSWORD = credentials("docker_password")
+            GITHUB_TOKEN = credentials("github_token")
+        }
     stages {
 
         stage('Build & Test') {
