@@ -56,10 +56,39 @@ dependencyManagement {
 test {
     outputs.dir snippetsDir
     //exclude IT test from build
-    exclude '**/HelloWorldServiceTestIT.class'
-    exclude 'ro/unibuc/hello/e2e'
+    useJUnitPlatform {
+        excludeTags("IT", "E2E")
+    }
 }
 
+task testIT(type: Test) {
+    outputs.dir snippetsDir
+
+    useJUnitPlatform {
+        includeTags "IT"
+    }
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+task testE2E(type: Test) {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = [
+                    '--plugin', 'pretty',
+                    '--plugin', 'html:target/cucumber-report.html',
+                    '--glue', 'ro.unibuc.link.e2e.steps',
+                    'src/test/resources']
+        }
+    }
+}
 asciidoctor {
     inputs.dir snippetsDir
     dependsOn test
