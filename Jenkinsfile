@@ -1,3 +1,8 @@
+environment {
+        DOCKER_PASSWORD = credentials("docker_password")
+        GITHUB_TOKEN = credentials("github_token")
+    }
+
 def IMAGE
 pipeline {
     agent any
@@ -11,20 +16,27 @@ pipeline {
         stage('Tag image') {
               steps {
                script {
-                                      GIT_TAG = sh([script: 'git fetch --tag && git tag', returnStdout: true]).trim()
-                                      MAJOR_VERSION = sh([script: 'git tag | cut -d . -f 1', returnStdout: true]).trim()
-                                      MINOR_VERSION = sh([script: 'git tag | cut -d . -f 2', returnStdout: true]).trim()
-                                      PATCH_VERSION = sh([script: 'git tag | cut -d . -f 3', returnStdout: true]).trim()
-                                      IMAGE="${MAJOR_VERSION}.\$((${MINOR_VERSION} + 1)).${PATCH_VERSION}"
-                                  }
-                sh "docker build -t radradradrad/hello-img:${IMAGE} ."
+                  sh([script: 'git fetch --tag', returnStdout: true]).trim()
+                  env.MAJOR_VERSION = sh([script: 'git tag | sort --version-sort | tail -1 | cut -d . -f 1', returnStdout: true]).trim()
+                  env.MINOR_VERSION = sh([script: 'git tag | sort --version-sort | tail -1 | cut -d . -f 2', returnStdout: true]).trim()
+                  env.PATCH_VERSION = sh([script: 'git tag | sort --version-sort | tail -1 | cut -d . -f 3', returnStdout: true]).trim()
+                  env.IMAGE_TAG = "${env.MAJOR_VERSION}.\$((${env.MINOR_VERSION} + 1)).${env.PATCH_VERSION}"
+               }
+                sh "docker build -t radradradrad/hello-img:${env.IMAGE_TAG} ."
               }
         }
-               stage('Push image') {
+        stage('Push image') {
               steps {
               sh "docker login docker.io -u radradradrad -p qwerty1234"
-              sh "docker push radradradrad/hello-img:${IMAGE}"
+              sh "docker push radradradrad/hello-img:${env.IMAGE_TAG}"
+              sh "git tag ${env.IMAGE_TAG}"
+              sh "git push https://$GITHUB_TOKEN@github.com/Madalina-Nicolescu/service.git ${env.IMAGE_TAG}"
               }
+        }
+        stage('Docker compose'){
+            script {
+               IMAGE_TAG="${env.IMAGE_TAG} docker-compose up -d hello"
+            }
         }
 
     }
