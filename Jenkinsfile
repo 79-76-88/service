@@ -33,12 +33,14 @@ pipeline {
         }
         stage('Docker compose'){
             steps{
-                script {
-                   IMAGE_TAG = "${env.IMAGE_TAG}"
-                }
-                sh "docker-compose up -d hello"
+                sh "IMAGE_TAG=${env.IMAGE_TAG} docker-compose up -d hello"
             }
         }
+         stage('E2E'){
+                    steps{
+                        sh "./gradlew testE2E"
+                    }
+                }
 
     }
 

@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import ro.unibuc.link.dto.*;
 import ro.unibuc.link.services.CollectionService;
 import ro.unibuc.link.validators.CollectionValidator;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.MeterRegistry;
 
 @Controller
 @RequestMapping("/collection")
@@ -14,9 +17,13 @@ public class CollectionController {
     private CollectionService collectionService;
     @Autowired
     private CollectionValidator validator;
+    @Autowired
+    MeterRegistry metricsRegistry;
 
     @GetMapping("/check/{collectionName}")
     public @ResponseBody
+    @Timed(value = "hello.greeting.time", description = "Time taken to check collection")
+    @Counted(value = "hello.greeting.count", description = "Times check was returned")
     IsAvailableDTO checkIfCollectionIsAvailable(@PathVariable String collectionName) {
         return collectionService.checkCollectionNameIsAvailable(collectionName);
     }
