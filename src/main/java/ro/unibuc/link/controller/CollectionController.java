@@ -1,14 +1,13 @@
 package ro.unibuc.link.controller;
 
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ro.unibuc.link.dto.*;
 import ro.unibuc.link.services.CollectionService;
 import ro.unibuc.link.validators.CollectionValidator;
-import io.micrometer.core.annotation.Counted;
-import io.micrometer.core.annotation.Timed;
-import io.micrometer.core.instrument.MeterRegistry;
 
 @Controller
 @RequestMapping("/collection")
@@ -17,17 +16,17 @@ public class CollectionController {
     private CollectionService collectionService;
     @Autowired
     private CollectionValidator validator;
-    @Autowired
-    MeterRegistry metricsRegistry;
 
     @GetMapping("/check/{collectionName}")
+    @Timed(value = "link.collection.available.time", description = "Time taken to check collection")
+    @Counted(value = "link.collection.available.count", description = "Times check was returned")
     public @ResponseBody
-    @Timed(value = "hello.greeting.time", description = "Time taken to check collection")
-    @Counted(value = "hello.greeting.count", description = "Times check was returned")
     IsAvailableDTO checkIfCollectionIsAvailable(@PathVariable String collectionName) {
         return collectionService.checkCollectionNameIsAvailable(collectionName);
     }
 
+    @Timed(value = "link.collection.set.time", description = "Time taken to set collection")
+    @Counted(value = "link.collection.set.count", description = "Times set collection was called")
     @PostMapping("/set")
     public @ResponseBody
     CollectionShowDTO setMapping(@RequestBody CollectionSetDTO collectionSetDTO) {
